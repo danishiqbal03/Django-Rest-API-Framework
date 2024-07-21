@@ -1,5 +1,6 @@
+from api.authentication import TokenAuthentication
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, mixins, permissions
+from rest_framework import authentication, generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -63,7 +64,8 @@ class ProductMixinView(
     # # user, although user can view on drf api ui, but can't view on admin panel,
     # # to disallow the view even from api ui, we need to use django custom permission
 
-    permission_classes = [IsStaffPermission]
+    authentication_classes = [authentication.SessionAuthentication, TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser, IsStaffPermission]
 
     def get(self, req, *args, **kwargs):
         pk = kwargs.get("pk")
